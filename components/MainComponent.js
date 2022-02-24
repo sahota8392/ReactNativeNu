@@ -13,21 +13,21 @@ class Main extends Component {
         };
     }
 
-    onCampsiteSelect(campsiteId) {                          //selected campsite updates this.state to that campsite ID
+    onCampsiteSelect(campsiteId) {                          //selected campsite updates this.state 
         this.setState({selectedCampsite: campsiteId});
     }
 
     render() {
         return (
-            <View style = {{flex: 1}}>
+            <View style = {{flex: 1}}>                      {/* flexible component of normal size and View is used to wrap so both Directory/CampsiteInfo appear */}
                 <Directory                                  //on button click, campsiteId will be the new selected campsite
                     campsites = {this.state.campsites} 
-                    onPress = {campsiteId => this.onCampsiteSelect(campsiteId)}
+                    onPress = {campsiteId => this.onCampsiteSelect(campsiteId)}     //contains the onCampsiteSelect event handler inside the function body, passing to Directory component so it's available to be triggered from there
                 />
 
-                <CampsiteInfo                               
+                <CampsiteInfo                        //Passing entire campsite object:  array of campsite object filtered to look for matching campsite Id
                     campsite = {this.state.campsites.filter(
-                        campsite => campsite.id === this.state.selectedCampsite)[0]}
+                        campsite => campsite.id === this.state.selectedCampsite)[0]}        //filter returns an array so we grab the first item @ index 0
                 />
             </View>
         );

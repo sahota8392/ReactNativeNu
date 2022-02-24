@@ -9,7 +9,7 @@ function Directory(props) {
             <ListItem
                 title = {item.name}                         //name of item will be title
                 subtitle = {item.description}               //description as subtitle
-                onPress = {() => props.onPress(item.id)}
+                onPress = {() => props.onPress(item.id)}    //when pressed on mobile device, this will trigger oncampsite event handler that we passed in props and gave name onPress as well
                 leftAvatar = {{ source: require('./images/react-lake.jpg')}}    //leftAvatar is prop requiring object so we use two sets of {}; 1st{} embed JavaScript in JSX and 2nd{} to define object literal
             />
         );
