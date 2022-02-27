@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
+import Home from './HomeComponent';
 import Directory from './DirectoryComponent';
 import CampsiteInfo from './CampsiteInfoComponent';
 import Constants from 'expo-constants';
 import { View, Platform } from 'react-native';
 // import { CAMPSITES } from '../shared/campsites';  removed, no longer in use
 import { createStackNavigator } from 'react-navigation-stack';
+import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createAppContainer } from 'react-navigation';
 
 const DirectoryNavigator = createStackNavigator(        //One stack navigator stored in this constant
-    {                                                       //components available for stack  
+    {                                                   //components available for stack  
         Directory: { screen: Directory },
-        CampsiteInfo: { screen: CampsiteInfo }
+        CampsiteInfo: { screen: CampsiteInfo }          //has 2 screens so we have 2
     },
     {
-        initialRouteName: 'Directory',                  //when navigation open, this default name will show
+        initialRouteName: 'Directory',                  //when navigation open, this default name will show since 2 screens otherwise not needed
         defaultNavigationOptions: {
             headerStyle: {
                 backgroundColor: '#5637DD'
@@ -26,7 +28,35 @@ const DirectoryNavigator = createStackNavigator(        //One stack navigator st
     }
 );
 
-const AppNavigator = createAppContainer(DirectoryNavigator);    //passing stack navigator above to the function createAppContainer
+const HomeNavigator = createStackNavigator(
+    {
+        Home: { screen: Home }
+    },
+    {
+        defaultNavigationOptions: {
+            headerStyle: {
+                backgroundColor: '#5637DD'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                color: '#fff'
+            }
+        }
+    }
+);
+
+const MainNavigator = createDrawerNavigator(
+    {
+        Home: {screen: HomeNavigator },
+        Directory: { screen: DirectoryNavigator }
+    },
+    {
+        drawerBackgroundColor: '#CEC8FF'
+    }
+);
+
+const AppNavigator = createAppContainer(MainNavigator);            //swapped the Directory with the Main
+// const AppNavigator = createAppContainer(DirectoryNavigator);    //passing stack navigator above to the function createAppContainer
 
 class Main extends Component {
     // constructor(props) {
