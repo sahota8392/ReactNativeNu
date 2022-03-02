@@ -114,10 +114,60 @@ const ContactNavigator = createStackNavigator(
 
 const MainNavigator = createDrawerNavigator(
     {
-        Home: {screen: HomeNavigator },
-        Directory: { screen: DirectoryNavigator },
-        About: { screen: AboutNavigator },
-        Contact: { screen: ContactNavigator }
+        Home: {
+            screen: HomeNavigator,
+            navigationOptions: {                        //object contains prop
+            drawerIcon: ({tintColor}) => (              //drawerIcon is prop with function tintColor which is available by default
+                    <Icon   
+                        name = 'home'
+                        type = 'font-awesome'
+                        size = {24}                     
+                        color = {tintColor}             //value of tintColor will change baesd on active screen or not - default colors
+                    />
+                )
+            }
+        },
+        Directory: { 
+            screen: DirectoryNavigator,
+            navigationOptions: {
+                drawerIcon: ({tintColor}) => (
+                    <Icon
+                        name = 'list'
+                        type = 'font-awesome'
+                        size = {24}
+                        color = {tintColor}
+                    />
+                )
+            }
+        },
+        About: { 
+            screen: AboutNavigator,
+            navigationOptions: {
+                drawerLabel: 'About Us',
+                drawerIcon: ({tintColor}) => (
+                    <Icon
+                        name = 'info-circle'
+                        type = 'font-awesome'
+                        size = {24}
+                        color = {tintColor}
+                    />
+                )
+            }
+        },
+        Contact: { 
+            screen: ContactNavigator,
+            navigationOptions: {
+                drawerLabel: 'Contact Us',
+                drawerIcon: ({tintColor}) => (
+                    <Icon 
+                        name = 'address-card'
+                        type = 'font-awesome'
+                        size = {24}
+                        color = {tintColor}
+                    />
+                )
+            }
+        }
     },
     {
         drawerBackgroundColor: '#CEC8FF'
