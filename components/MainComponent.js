@@ -7,15 +7,26 @@ import About from './ AboutComponent';
 import Contact from './ContactComponent';
 
 import Constants from 'expo-constants';
-import { View, Platform } from 'react-native';
+import { View, Platform, StyleSheet } from 'react-native';
 // import { CAMPSITES } from '../shared/campsites';  removed, no longer in use
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createAppContainer } from 'react-navigation';
+import { Icon } from 'react-native-elements';
 
 const DirectoryNavigator = createStackNavigator(        //One stack navigator stored in this constant
     {                                                   //components available for stack  
-        Directory: { screen: Directory },
+        Directory: { 
+            screen: Directory,
+            navigationOptions: ({navigation}) => ({     //navigation prop passed in parameter list
+                headerLeft: <Icon
+                    name = 'list'
+                    type = 'font-awesome'
+                    iconStyle = {styles.stackIcon}      //custom style we created
+                    onPress = {() => navigation.toggleDrawer()}     //onPress prop of icon component to make it interactive and we use navigation prop built in toggledrawer
+                />
+            })
+        },
         CampsiteInfo: { screen: CampsiteInfo }          //has 2 screens so we have 2
     },
     {
@@ -37,15 +48,21 @@ const HomeNavigator = createStackNavigator(
         Home: { screen: Home }
     },
     {
-        defaultNavigationOptions: {
+        defaultNavigationOptions: ({navigation}) => ({      //destructure navigation prop in parameter list - arrow function and wrap styles in curly braces
             headerStyle: {
                 backgroundColor: '#5637DD'
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
                 color: '#fff'
-            }
-        }
+            },
+            headerLeft: <Icon
+                name = 'home'
+                type = 'font-awesome'
+                iconStyle = {styles.stackIcon}      //custom style we created
+                onPress = {() => navigation.toggleDrawer()}     //onPress prop of icon component to make it interactive and we use navigation prop built in toggledrawer
+        />
+        })
     }
 );
 
@@ -54,15 +71,21 @@ const AboutNavigator = createStackNavigator(
         Home: { screen: About }
     },
     {
-        defaultNavigationOptions: {
+        defaultNavigationOptions: ({navigation}) => ({      //destructure navigation prop in parameter list - arrow function and wrap styles in curly braces
             headerStyle: {
                 backgroundColor: '#5637DD'
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
                 color: '#fff'
-            }
-        }
+            },
+            headerLeft: <Icon
+                name = 'info-circle'
+                type = 'font-awesome'
+                iconStyle = {styles.stackIcon}      //custom style we created
+                onPress = {() => navigation.toggleDrawer()}     //onPress prop of icon component to make it interactive and we use navigation prop built in toggledrawer
+        />
+        })
     }
 );
 
@@ -71,15 +94,21 @@ const ContactNavigator = createStackNavigator(
         Home: { screen: Contact }
     },
     {
-        defaultNavigationOptions: {
+        defaultNavigationOptions: ({navigation}) => ({      //destructure navigation prop in parameter list - arrow function and wrap styles in curly braces
             headerStyle: {
                 backgroundColor: '#5637DD'
             },
             headerTintColor: '#fff',
             headerTitleStyle: {
                 color: '#fff'
-            }
-        }
+            },
+            headerLeft: <Icon
+                name = 'address-card'
+                type = 'font-awesome'
+                iconStyle = {styles.stackIcon}      //custom style we created
+                onPress = {() => navigation.toggleDrawer()}     //onPress prop of icon component to make it interactive and we use navigation prop built in toggledrawer
+        />
+        })
     }
 );
 
@@ -133,5 +162,13 @@ class Main extends Component {
         );
     }
 }
+
+const styles = StyleSheet.create({
+    stackIcon: {
+        marginLeft: 10,
+        color: '#fff',
+        fontSize: 24
+    }
+});
 
 export default Main;
