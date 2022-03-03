@@ -1,3 +1,4 @@
+//No state data so only component in this project that does not need to be connected to redux
 import React, { Component } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { Card } from 'react-native-elements';

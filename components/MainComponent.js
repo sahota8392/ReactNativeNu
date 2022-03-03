@@ -14,6 +14,15 @@ import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
 import { createAppContainer } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 import SafeAreaView from 'react-native-safe-area-view';         //for iphoneX - defines part of area as safe where nothing will layout in certain area for physical area of phone
+import { connect } from 'react-redux';
+import { fetchCampsites, fetchComments, fetchPromotions, fetchPartners } from '../redux/ActionCreators';
+
+const mapDispatchToProps = {        //allows us to access ActionCreators as props
+    fetchCampsites,
+    fetchComments,
+    fetchPartners,
+    fetchPromotions
+}
 
 const DirectoryNavigator = createStackNavigator(        //One stack navigator stored in this constant
     {                                                   //components available for stack  
@@ -203,6 +212,13 @@ const AppNavigator = createAppContainer(MainNavigator);            //swapped the
 // const AppNavigator = createAppContainer(DirectoryNavigator);    //passing stack navigator above to the function createAppContainer
 
 class Main extends Component {
+
+    componentDidMount() {                   //built-in method calling each 
+        this.props.fetchCampsites();
+        this.props.fetchComments();
+        this.props.fetchPromotions();
+        this.props.fetchPartners();
+    }
     // constructor(props) {
     //     super(props);       //constructor and super are need for the this.state
     //     this.state = {
@@ -267,4 +283,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Main;
+export default connect(null, mapDispatchToProps)(Main);     //null since there's no mapStateToProps function

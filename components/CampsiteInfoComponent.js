@@ -2,8 +2,17 @@ import React, { Component } from 'react'
 import { Text, View, ScrollView, Flatlist } from 'react-native';
 import { Card, Icon} from 'react-native-elements';           //because we want the list of the camps to show as cards & Icon so we can have the favorites icon
 import { FlatList } from 'react-native-gesture-handler';
-import { CAMPSITES } from '../shared/campsites';
-import { COMMENTS } from '../shared/comments';
+// import { CAMPSITES } from '../shared/campsites';
+// import { COMMENTS } from '../shared/comments';
+import { connect } from 'react-redux';
+import { baseUrl } from '../shared/baseUrl';
+
+const mapStateToProps = state => {      //receives state as prop and returns partners data from state
+    return {
+        campsites: state.campsites,
+        comments: state.comments
+    };
+};
 
 function RenderCampsite(props) {           //changed campsite to props as we need entire props now rather than just campsite
     
@@ -13,7 +22,7 @@ function RenderCampsite(props) {           //changed campsite to props as we nee
         return(                                         //if campsite is truthy return a Card component
             <Card 
                     featuredTitle = {campsite.name}     
-                    image = {require('./images/react-lake.jpg')}>
+                    image = {{uri: baseUrl + campsite.image}} >
                 <Text style = {{margin: 10}}>               
                     {campsite.description}            {/* text will appear in this style which is the description per campsite  */}
                 </Text>
@@ -61,8 +70,8 @@ class CampsiteInfo extends Component {      //class - so we need to wrap everyth
     constructor(props) {
         super(props);
         this.state = {
-            campsites: CAMPSITES,
-            comments: COMMENTS,              //brought comments array into local state of comments
+            // campsites: CAMPSITES,
+            // comments: COMMENTS,              //brought comments array into local state of comments
             favorite: false                  //initial state is that it is not a favorite site
         };
     }
@@ -75,10 +84,10 @@ class CampsiteInfo extends Component {      //class - so we need to wrap everyth
         title: 'Campsite Information'
     }
 
-    render() {
+    render() {      //changed state.campsites and state.comments
         const campsiteId = this.props.navigation.getParam('campsiteId');
-        const campsite = this.state.campsites.filter(campsite => campsite.id === campsiteId)[0];
-        const comments = this.state.comments.filter(comment => comment.campsiteId === campsiteId);          //filtering for particular campsite we want to render based campsiteId into comments that is below
+        const campsite = this.props.campsites.campsites.filter(campsite => campsite.id === campsiteId)[0];
+        const comments = this.props.comments.comments.filter(comment => comment.campsiteId === campsiteId);          //filtering for particular campsite we want to render based campsiteId into comments that is below
         return (                                                //after changing function to class, we took out props.campsite and just {campsites}
             <ScrollView>
                 <RenderCampsite campsite = {campsite} 
@@ -91,4 +100,4 @@ class CampsiteInfo extends Component {      //class - so we need to wrap everyth
     }
 }
 
-export default CampsiteInfo;
+export default connect(mapStateToProps) (CampsiteInfo);
