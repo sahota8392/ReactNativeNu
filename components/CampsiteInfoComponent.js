@@ -6,12 +6,19 @@ import { FlatList } from 'react-native-gesture-handler';
 // import { COMMENTS } from '../shared/comments';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
+import { postFavorite } from '../redux/ActionCreators';
+
 
 const mapStateToProps = state => {      //receives state as prop and returns partners data from state
     return {
         campsites: state.campsites,
-        comments: state.comments
+        comments: state.comments,
+        favorites: state.favorites
     };
+};
+
+const mapDispatchToProps = {
+    postFavorite: campsiteId => (postFavorite(campsiteId))
 };
 
 function RenderCampsite(props) {           //changed campsite to props as we need entire props now rather than just campsite
@@ -67,17 +74,17 @@ function RenderComments({comments}) {                                           
 
 // function CampsiteInfo(props) {       //changed function to Class componenet so we can use local store data
 class CampsiteInfo extends Component {      //class - so we need to wrap everything inside {}
-    constructor(props) {
-        super(props);
-        this.state = {
-            // campsites: CAMPSITES,
-            // comments: COMMENTS,              //brought comments array into local state of comments
-            favorite: false                  //initial state is that it is not a favorite site
-        };
-    }
+    // constructor(props) {
+    //     super(props);
+    //     this.state = {
+    //         // campsites: CAMPSITES,
+    //         // comments: COMMENTS,              //brought comments array into local state of comments
+    //         favorite: false                  //initial state is that it is not a favorite site
+    //     };
+    // }
 
-    markFavorite() {                        //eventHandler to toggle favorite to true when clicking icon
-        this.setState({favorite: true});
+    markFavorite(campsiteId) {                        //eventHandler to toggle favorite to true when clicking icon
+        this.props.postFavorite(campsiteId);
     }
 
     static navigationOptions = {
@@ -91,8 +98,8 @@ class CampsiteInfo extends Component {      //class - so we need to wrap everyth
         return (                                                //after changing function to class, we took out props.campsite and just {campsites}
             <ScrollView>
                 <RenderCampsite campsite = {campsite} 
-                    favorite = {this.state.favorite}                //passing initial state
-                    markFavorite={() => this.markFavorite()}      //passing markFavorite as onPress
+                    favorite = {this.props.favorites.includes(campsiteId)}                //passing initial state
+                    markFavorite={() => this.markFavorite(campsiteId)}      //passing markFavorite as onPress
                 />  
                 <RenderComments comments = {comments} />
             </ScrollView>
@@ -100,4 +107,4 @@ class CampsiteInfo extends Component {      //class - so we need to wrap everyth
     }
 }
 
-export default connect(mapStateToProps) (CampsiteInfo);
+export default connect(mapStateToProps, mapDispatchToProps)(CampsiteInfo);

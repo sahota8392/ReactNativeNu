@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, View, Text } from 'react-native';
 // import { ListItem } from 'react-native-elements';
 import { Tile } from 'react-native-elements';               //changed ListItem to Tile for Redux
 // import { CAMPSITES } from '../shared/campsites';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
+import Loading from './LoadingComponent';
 
 const mapStateToProps = state => {      //receives state as prop and returns partners data from state
     return {
@@ -41,6 +42,17 @@ render() {
         );
     };
 
+    if (this.props.campsites.isLoading) {
+        return <Loading />;
+    }
+    if (this.props.campsites.errMess) {
+        return (
+            <View>
+                <Text>{this.props.campsites.errMess}</Text>
+            </View>
+        );
+    }
+    
     return (
         <FlatList
             data = {this.props.campsites.campsites}                    //campsites data is to this.state so we don't use props.campsite
