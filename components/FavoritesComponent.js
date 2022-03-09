@@ -1,5 +1,5 @@
 import React, { Component } from 'react';                       //component so we can use class component
-import { FlatList, View, Text, StyleSheet } from 'react-native';            
+import { FlatList, View, Text, StyleSheet, Alert } from 'react-native';            
 import { ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';                          //access campsites from redux stores so we need connect function
 import { Loading } from './LoadingComponent';                   //show Loading component while assets loading
@@ -36,7 +36,28 @@ class Favorites extends Component {
                     <View style ={styles.deleteView}>      
                         <TouchableOpacity
                             style = {styles.deleteTouchable}
-                            onPress = {() => this.props.deleteFavorite(item.id)}
+                            onPress = {() => 
+                                Alert.alert(
+                                    'Delete Favorite?',
+                                    'Are you sure you wish to delete the favorite campsite ' +
+                                        item.name +
+                                        '?',
+                                    [                                           //Alert buttons (Cancel and Ok)
+                                        {
+                                            text: 'Cancel',
+                                            onPress: () => console.log(item.name + 'Not Deleted'),
+                                            style: 'cancel'
+                                        },
+                                        {  
+                                            text: 'OK',                         //Alert button to okay cancel it
+                                            onPress: () => this.props.deleteFavorite(item.id)
+                                        },
+                                    ],
+                                    { cancelable: false }                   //by default alerts on android can be dismissed by outside of box, makes user choose
+                                )
+                            }
+
+                            
                         >
                             <Text style = {styles.deleteText}>Delete</Text>
                         </TouchableOpacity>
