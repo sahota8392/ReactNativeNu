@@ -7,6 +7,7 @@ import About from './ AboutComponent';
 import Contact from './ContactComponent';
 
 import Reservation from './ReservationComponent';       //the reservation form import
+import Favorites from './FavoritesComponent';
 
 import Constants from 'expo-constants';
 import { View, Platform, StyleSheet, Text, ScrollView, Image } from 'react-native';
@@ -148,6 +149,30 @@ const ReservationNavigator = createStackNavigator(
     }
 );
 
+//Favorites Navigator 
+const FavoritesNavigator = createStackNavigator(
+    {
+        Favorites: { screen: Favorites }
+    },
+    {
+        defaultNavigationOptions: ({navigation}) => ({      //destructure navigation prop in parameter list - arrow function and wrap styles in curly braces
+            headerStyle: {
+                backgroundColor: '#5637DD'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                color: '#fff'
+            },
+            headerLeft: <Icon
+                name = 'heart'
+                type = 'font-awesome'
+                iconStyle = {styles.stackIcon}      //custom style we created
+                onPress = {() => navigation.toggleDrawer()}     //onPress prop of icon component to make it interactive and we use navigation prop built in toggledrawer
+        />
+        })
+    }
+);
+
 const CustomDrawerContentComponent = props => (         //will receive props as parameter and return the view of customized drawer  //flex 1 will take 1/3 of space and flex 2 will take 2/3 of space
     <ScrollView>
         <SafeAreaView                                 
@@ -206,6 +231,20 @@ const MainNavigator = createDrawerNavigator(
                 drawerIcon: ({tintColor}) => (
                     <Icon
                         name = 'tree'
+                        type = 'font-awesome'
+                        size = {24}
+                        color = {tintColor}
+                    />
+                )
+            }
+        },
+        Favorites: { 
+            screen: FavoritesNavigator,
+            navigationOptions: {
+                drawerLabel: 'My Favorites',
+                drawerIcon: ({tintColor}) => (
+                    <Icon
+                        name = 'heart'
                         type = 'font-awesome'
                         size = {24}
                         color = {tintColor}
