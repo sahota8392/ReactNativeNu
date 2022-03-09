@@ -172,3 +172,8 @@ export const addPartners = partners => ({
     type: ActionTypes.ADD_PARTNERS,
     payload: partners
 });
+
+export const deleteFavorite = campsiteId => ({                  //Delete Favorite based on campsiteId (payload is what is deleted)
+    type: ActionTypes.DELETE_FAVORITE,
+    payload: campsiteId
+});
