@@ -6,6 +6,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import Loading from './LoadingComponent';
+import * as Animatable from 'react-native-animatable';      //after installation of expo install react-native-animatable
 
 const mapStateToProps = state => {      //receives state as prop and returns partners data from state
     return {
@@ -57,31 +58,36 @@ class About extends Component {
             );
         }
 
+                                                                                                //Animatable.View --- animation style, style is for 2 second and will wait 1 second to start
         if (this.props.partners.errMess) {
             return (
                 <ScrollView>
-                    <Mission />
-                    <Card
-                        title='Community Partners'>
-                        <Text>{this.props.partners.errMess}</Text>
-                    </Card>
+                    <Animatable.View animation = 'fadeInDown' duration ={2000} delay={1000}>    
+                        <Mission />
+                        <Card
+                            title='Community Partners'>
+                            <Text>{this.props.partners.errMess}</Text>
+                        </Card>
+                    </Animatable.View>
                 </ScrollView>
             );
         }
 
         return(
             <ScrollView>
-                <Card title = 'Our Mission'>
-                <Mission />
-                </Card>
+                <Animatable.View animation = 'fadeInDown' duration ={2000} delay={1000}>    
+                    <Card title = 'Our Mission'>
+                    <Mission />
+                    </Card>
 
-                <Card title = 'Community Partners'>
-                    <FlatList
-                        data = {this.props.partners.partners}           //changed from state.partners -- current is partners.partners since 1st refers to entire part of state & 2nd is partner's data array
-                        renderItem = {renderPartner}
-                        keyExtractor = {item => item.id.toString()}
-                    />
-                </Card>
+                    <Card title = 'Community Partners'>
+                        <FlatList
+                            data = {this.props.partners.partners}           //changed from state.partners -- current is partners.partners since 1st refers to entire part of state & 2nd is partner's data array
+                            renderItem = {renderPartner}
+                            keyExtractor = {item => item.id.toString()}
+                        />
+                    </Card>
+                </Animatable.View>
             </ScrollView>
         );
     }

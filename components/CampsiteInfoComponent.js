@@ -7,6 +7,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { postFavorite, postComment } from '../redux/ActionCreators';
+import * as Animatable from 'react-native-animatable';      //after installation of expo install react-native-animatable
 
 
 const mapStateToProps = state => {      //receives state as prop and returns partners data from state
@@ -28,34 +29,36 @@ function RenderCampsite(props) {           //changed campsite to props as we nee
 
     if(campsite) {
         return(                                         //if campsite is truthy return a Card component
-            <Card 
-                    featuredTitle = {campsite.name}     
-                    image = {{uri: baseUrl + campsite.image}} >
-                <Text style = {{margin: 10}}>               
-                    {campsite.description}            {/* text will appear in this style which is the description per campsite  */}
-                </Text>
+            <Animatable.View animation = 'fadeInDown' duration ={2000} delay={1000}>    
+                <Card 
+                        featuredTitle = {campsite.name}     
+                        image = {{uri: baseUrl + campsite.image}} >
+                    <Text style = {{margin: 10}}>               
+                        {campsite.description}            {/* text will appear in this style which is the description per campsite  */}
+                    </Text>
 
-                <View style = {styles.cardRow}>
-                    <Icon                                                                   //Bootstrap - icon of the favorite heart symbol we want to show
-                        name = {props.favorite ? 'heart' : 'heart-o'}                       //if true then the solid heart and if false, then the outlined version shows
-                        type = 'font-awesome'   
-                        color = '#f50'
-                        raised                      //subtle shadow effecg
-                        reverse                     //reverse color scheme
-                        onPress = {() => props.favorite ?                                   //onPress if it's a favorite then just log that it is already a favorite otherwise mark as favorite
-                            console.log('Already a Favorite') : props.markFavorite()}
-                    />   
+                    <View style = {styles.cardRow}>
+                        <Icon                                                                   //Bootstrap - icon of the favorite heart symbol we want to show
+                            name = {props.favorite ? 'heart' : 'heart-o'}                       //if true then the solid heart and if false, then the outlined version shows
+                            type = 'font-awesome'   
+                            color = '#f50'
+                            raised                      //subtle shadow effecg
+                            reverse                     //reverse color scheme
+                            onPress = {() => props.favorite ?                                   //onPress if it's a favorite then just log that it is already a favorite otherwise mark as favorite
+                                console.log('Already a Favorite') : props.markFavorite()}
+                        />   
 
-                    <Icon                                                //Pencil icon for the comments
-                        name = 'pencil'
-                        type = 'font-awesome'
-                        color = '#5637DD'
-                        raised
-                        reverse
-                        onPress = {() => props.onShowModal()}
-                    />
-                </View>          
-            </Card>  
+                        <Icon                                                //Pencil icon for the comments
+                            name = 'pencil'
+                            type = 'font-awesome'
+                            color = '#5637DD'
+                            raised
+                            reverse
+                            onPress = {() => props.onShowModal()}
+                        />
+                    </View>          
+                </Card>  
+            </Animatable.View>
         );
     }
 
@@ -81,13 +84,15 @@ function RenderComments({comments}) {                                           
     };
 
     return (
-        <Card title = 'Comments'>
-            <FlatList   
-                data = {comments}                           //render comments data into this flatlist
-                renderItem = {renderCommentItem}            //renderItem  taking the comement items above into the final form
-                keyExtractor = {item => item.id.toString()}
-            />
-        </Card>
+        <Animatable.View animation = 'fadeInUp' duration ={2000} delay={1000}>    
+            <Card title = 'Comments'>
+                <FlatList   
+                    data = {comments}                           //render comments data into this flatlist
+                    renderItem = {renderCommentItem}            //renderItem  taking the comement items above into the final form
+                    keyExtractor = {item => item.id.toString()}
+                />
+            </Card>
+        </Animatable.View>
     );
 }
 

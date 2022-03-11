@@ -7,6 +7,7 @@ import { baseUrl} from '../shared/baseUrl';                     //images from js
 import { SwipeRow } from 'react-native-swipe-list-view';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { deleteFavorite } from '../redux/ActionCreators';       //when we want to dispatch action creator from component, use mapDispatchToProps
+import * as Animatable from 'react-native-animatable';      //after installation of expo install react-native-animatable
 
 const mapStateToProps = state => {                              //will need campsite data from state and favorites
     return {
@@ -86,13 +87,15 @@ class Favorites extends Component {
             );
         }
         return(                                    //no loading/error at this point  -- pass data prop for campsites to render
-            <FlatList
-                data = {this.props.campsites.campsites.filter(              //take array of campsites from prop and filter for campsites where campsite id matches to list of favorites
-                    campsite => this.props.favorites.includes(campsite.id)      //checks each favorite if it includes the ID of the campsite
-                )}
-                renderItem = {renderFavoriteItem}                               
-                keyExtractor = {item => item.id.toString()}                 //passing each item to function and extracting id from each to use as unique key of each item
-            />
+            <Animatable.View animation = 'fadeInRightBig' duration ={2000} delay={2000}>    
+                <FlatList
+                    data = {this.props.campsites.campsites.filter(              //take array of campsites from prop and filter for campsites where campsite id matches to list of favorites
+                        campsite => this.props.favorites.includes(campsite.id)      //checks each favorite if it includes the ID of the campsite
+                    )}
+                    renderItem = {renderFavoriteItem}                               
+                    keyExtractor = {item => item.id.toString()}                 //passing each item to function and extracting id from each to use as unique key of each item
+                />
+            </Animatable.View> 
         );
     }
 }
