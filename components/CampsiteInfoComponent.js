@@ -32,6 +32,8 @@ function RenderCampsite(props) {           //changed campsite to props as we nee
 
     const recognizeDrag = ({dx}) => (dx < -200) ? true: false;      //parameter taking object and strucutre within it taking property dx (distance x-axis) -- true if less than -200 and false if not
 
+    const recognizeComment = ({dx}) => (dx > 200) ? true: false;    //true from left to right over 200px
+
     const panResponder = PanResponder.create({                      //equal to panResponder api creating 
         onStartShouldSetPanResponder: () => true,                    //object passed as argument describing what to create   -- activate pan responder to respond to gestures on comp it's used on
         onPanResponderGrant: () => {
@@ -59,6 +61,9 @@ function RenderCampsite(props) {           //changed campsite to props as we nee
                     ],
                     {cancelable: false}                         //prevents user from just exiting out of box, have to choose OK or Cancel
                 );
+            } else if(recognizeComment(gestureState)) {
+                console.log('pan responder end', gestureState);
+                props.onShowModal();
             }
             return true;
         }
