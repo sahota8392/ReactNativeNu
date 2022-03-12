@@ -27,11 +27,18 @@ function RenderCampsite(props) {           //changed campsite to props as we nee
     
     const {campsite} = props;
 
+    //Rubberband effect when marked as favorite
+    const view = React.createRef();
+
     const recognizeDrag = ({dx}) => (dx < -200) ? true: false;      //parameter taking object and strucutre within it taking property dx (distance x-axis) -- true if less than -200 and false if not
 
-    
     const panResponder = PanResponder.create({                      //equal to panResponder api creating 
         onStartShouldSetPanResponder: () => true,                    //object passed as argument describing what to create   -- activate pan responder to respond to gestures on comp it's used on
+        onPanResponderGrant: () => {
+            view.current.rubberBand(3000)
+            .then(endState => console.log(endState.finished ? 'finished' : 'canceled'));
+        },
+        
         onPanResponderEnd: (e, gestureState) => {                   
             console.log('pan responder end', gestureState);         //object holding info that just ended - log will show what it contains
             if(recognizeDrag(gestureState)) {                       //passing gestureState object which will return return if gesture is more than 200 pixels to left or -200 pixels
@@ -63,6 +70,7 @@ function RenderCampsite(props) {           //changed campsite to props as we nee
                 animation = 'fadeInDown' 
                 duration ={2000} 
                 delay={1000}
+                ref = {view}
                 {...panResponder.panHandlers}           //spread syntax to spread out pan responders panhandlers and then recombine them into one object so we can pass in as props for this component  --- connecting pan responder to this component
             >    
                 <Card 
