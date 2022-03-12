@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, ScrollView, Flatlist, Modal, Button, StyleSheet } from 'react-native';
+import { Text, View, ScrollView, Flatlist, Modal, Button, StyleSheet, Alert, PanResponder } from 'react-native';
 import { Card, Icon, Rating, Input } from 'react-native-elements';           //because we want the list of the camps to show as cards & Icon so we can have the favorites icon
 import { FlatList } from 'react-native-gesture-handler';
 // import { CAMPSITES } from '../shared/campsites';
@@ -27,9 +27,44 @@ function RenderCampsite(props) {           //changed campsite to props as we nee
     
     const {campsite} = props;
 
+    const recognizeDrag = ({dx}) => (dx < -200) ? true: false;      //parameter taking object and strucutre within it taking property dx (distance x-axis) -- true if less than -200 and false if not
+
+    
+    const panResponder = PanResponder.create({                      //equal to panResponder api creating 
+        onStartShouldSetPanResponder: () => true,                    //object passed as argument describing what to create   -- activate pan responder to respond to gestures on comp it's used on
+        onPanResponderEnd: (e, gestureState) => {                   
+            console.log('pan responder end', gestureState);         //object holding info that just ended - log will show what it contains
+            if(recognizeDrag(gestureState)) {                       //passing gestureState object which will return return if gesture is more than 200 pixels to left or -200 pixels
+                Alert.alert(                                        //if gestureState is true, this alert shows
+                    'Add Favorite',
+                    'Are you sure you wish to add ' + campsite.name + ' to favorite?',
+                    [
+                        {
+                            text: 'Cancel',                         //array holding object that first one is Cancel to not proceed
+                            style: 'cancel',
+                            onPress: () => console.log('Cancel Pressed')
+                        },
+                        {
+                            text: 'OK',                             //object saying ok to add to favorite -- checking if already favorite & if not, it will call markFavorite event handler
+                            onPress: () => props.favorite ?
+                                console.log('Already set as Favorite') : props.markFavorite()
+                        }
+                    ],
+                    {cancelable: false}                         //prevents user from just exiting out of box, have to choose OK or Cancel
+                );
+            }
+            return true;
+        }
+    });
+
     if(campsite) {
         return(                                         //if campsite is truthy return a Card component
-            <Animatable.View animation = 'fadeInDown' duration ={2000} delay={1000}>    
+            <Animatable.View 
+                animation = 'fadeInDown' 
+                duration ={2000} 
+                delay={1000}
+                {...panResponder.panHandlers}           //spread syntax to spread out pan responders panhandlers and then recombine them into one object so we can pass in as props for this component  --- connecting pan responder to this component
+            >    
                 <Card 
                         featuredTitle = {campsite.name}     
                         image = {{uri: baseUrl + campsite.image}} >
