@@ -8,6 +8,7 @@ import Contact from './ContactComponent';
 
 import Reservation from './ReservationComponent';       //the reservation form import
 import Favorites from './FavoritesComponent';
+import Login from './LoginComponent';
 
 import Constants from 'expo-constants';
 import { View, Platform, StyleSheet, Text, ScrollView, Image } from 'react-native';
@@ -173,6 +174,29 @@ const FavoritesNavigator = createStackNavigator(
     }
 );
 
+const LoginNavigator = createStackNavigator(
+    {
+        Login: { screen: Login }
+    },
+    {
+        defaultNavigationOptions: ({navigation}) => ({      //destructure navigation prop in parameter list - arrow function and wrap styles in curly braces
+            headerStyle: {
+                backgroundColor: '#5637DD'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                color: '#fff'
+            },
+            headerLeft: <Icon
+                name = 'sign-in'
+                type = 'font-awesome'
+                iconStyle = {styles.stackIcon}                     //custom style we created
+                onPress = {() => navigation.toggleDrawer()}     //onPress prop of icon component to make it interactive and we use navigation prop built in toggledrawer
+        />
+        })
+    }
+);
+
 const CustomDrawerContentComponent = props => (         //will receive props as parameter and return the view of customized drawer  //flex 1 will take 1/3 of space and flex 2 will take 2/3 of space
     <ScrollView>
         <SafeAreaView                                 
@@ -197,7 +221,21 @@ const CustomDrawerContentComponent = props => (         //will receive props as 
 //showing items in side drawer of DrawerItems - spreading into props
 
 const MainNavigator = createDrawerNavigator(
+    
     {
+        Login: {
+            screen: LoginNavigator,
+            navigationOptions: {                        //object contains prop
+            drawerIcon: ({tintColor}) => (              //drawerIcon is prop with function tintColor which is available by default
+                    <Icon   
+                        name = 'sign-in'
+                        type = 'font-awesome'
+                        size = {24}                     
+                        color = {tintColor}             //value of tintColor will change baesd on active screen or not - default colors
+                    />
+                )
+            }
+        },
         Home: {
             screen: HomeNavigator,
             navigationOptions: {                        //object contains prop
@@ -282,6 +320,7 @@ const MainNavigator = createDrawerNavigator(
         }
     },
     {
+        initialRouteName: 'Home',                                    //first screen to be shown
         drawerBackgroundColor: '#CEC8FF',
         contentComponent: CustomDrawerContentComponent              //conecting contentComponent to Custom Drawer Content
     }
