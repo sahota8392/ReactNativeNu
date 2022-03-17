@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, ScrollView, Flatlist, Modal, Button, StyleSheet, Alert, PanResponder } from 'react-native';
+import { Text, View, ScrollView, Flatlist, Modal, Button, StyleSheet, Alert, PanResponder, Share } from 'react-native';
 import { Card, Icon, Rating, Input } from 'react-native-elements';           //because we want the list of the camps to show as cards & Icon so we can have the favorites icon
 import { FlatList } from 'react-native-gesture-handler';
 // import { CAMPSITES } from '../shared/campsites';
@@ -69,6 +69,17 @@ function RenderCampsite(props) {           //changed campsite to props as we nee
         }
     });
 
+//Sharing the Campsite
+    const shareCampsite = (title, message, url) => {        //3 parameters
+        Share.share({
+            title,                                          //takes 2 objects as argument  
+            message: `${title}: ${message} ${url}`,         
+            url                                             
+        }, {
+            dialogTitle: 'Share ' + title                   //2nd optional object:  This is for android only the dialogTitle
+        });
+    };
+
     if(campsite) {
         return(                                         //if campsite is truthy return a Card component
             <Animatable.View 
@@ -103,6 +114,15 @@ function RenderCampsite(props) {           //changed campsite to props as we nee
                             raised
                             reverse
                             onPress = {() => props.onShowModal()}
+                        />
+
+                        <Icon
+                            name = {'share'}
+                            type = 'font-awesome'
+                            color = '#5637DD'
+                            raised
+                            reverse
+                            onPress = {() => shareCampsite(campsite.name, campsite.description, baseUrl + campsite.image)}
                         />
                     </View>          
                 </Card>  
