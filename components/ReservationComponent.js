@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Text, View, ScrollView, StyleSheet, Picker, Switch, Button, Alert } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';            //installed in terminal that we are importing
 import * as Animatable from 'react-native-animatable';
+import * as Notifications from 'expo-notifications';        //import all notifications we installed in expo install expo-notifications@~0.3.3
 
 
 //Creating form as React controlled form -- stored/controlled in this component itself
@@ -39,6 +40,32 @@ class Reservation extends Component {
             showCalendar: false,
             showModal: false
         });
+    }
+
+//  async/await is new one
+    async presentLocalNotifications(date){                  // async always returns a promise  -- date is parameter which is the requested reservation date
+        function sendNotification() {                       //notification put in this function so it sends after we get permission for notifications
+            Notifications.setNotificationHandler({
+                handleNotification: async () => ({          //shows the alert notification
+                    shouldShowAlert: true
+                })
+            });
+
+            Notifications.scheduleNotificationAsync({                       
+                content: {
+                    title: 'Your Campsite Reservation Search',
+                    body: `Search for ${date} requested`                    //this is the back tick not single quote
+                },
+                trigger: null                                               //notification will fire immediately or can set time to go off in 30 sec or 1 min, etc.
+            })
+        }
+        let permissions = await Notifications.getPermissionsAsync();        //will check if we have permissions to fire notifications, stops until permission is allowed -- await only work with async
+        if(!permissions.granted) {                                          //if permission NOT granted, we use await to not send notification
+            permissions = await Notifications.requestPermissionsAsync();
+        }
+        if(permissions.granted) {                                           //checks again and if granted, we call the sendNotification function to release notifications
+            sendNotification();
+        }
     }
 
 //label is what user sees and value is what is passed to the onvalueChange prop
@@ -111,8 +138,11 @@ class Reservation extends Component {
                                         },
                                         {
                                             text: 'OK',
-                                            onPress: () => this.resetForm(),
-                                        },
+                                            onPress: () => {
+                                                            this.presentLocalNotifications(this.state.date.toLocaleDateString('en-US'));
+                                                            this.resetForm();
+                                            }
+                                        }
                                     ],
                                     {cancelable: false}
                                 )
