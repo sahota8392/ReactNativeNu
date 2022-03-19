@@ -341,12 +341,7 @@ class Main extends Component {
         this.props.fetchPromotions();
         this.props.fetchPartners();
 
-        NetInfo.fetch().then(connectionInfo => {                                                //fetch method returns promise
-            (Platform.OS === 'ios')
-                ? Alert.alert('Initial Network Connectivity Type:', connectionInfo.type)        //if IOS, disply this connection
-                : ToastAndroid.show('Initial Network Connectivity Type: ' +                     //or if not, toast for android, brief message that fades away, LONG is 3.5 seconds
-                    connectionInfo.type, ToastAndroid.LONG);
-        });
+        this.showNetInfo();
 
         this.unsubscribeNetInfo = NetInfo.addEventListener(connectionInfo => {                  //this is a method on the parent class  -- addEventListener takes callback function
             this.handleConnectivityChange(connectionInfo);                                      
@@ -356,6 +351,17 @@ class Main extends Component {
     componentWillUnmount() {
         this.unsubscribeNetInfo();                                              //stop listening for connection changes when main component unmounts
     }
+
+// NetInfo.fetch().then(connectionInfo =>                                                 
+        showNetInfo = async() => {
+            const connectionInfo = await NetInfo.fetch();
+                (Platform.OS === 'ios')
+                    ? Alert.alert('Initial Network Connectivity Type:', connectionInfo.type)        
+                    : ToastAndroid.show('Initial Network Connectivity Type: ' +                     
+                        connectionInfo.type, ToastAndroid.LONG);
+        }
+
+
 
     handleConnectivityChange = connectionInfo => {                                          //change in connection state, this will pop up
         let connectionMsg = 'You are now connected to an active network.';
