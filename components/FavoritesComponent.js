@@ -3,7 +3,7 @@ import { FlatList, View, Text, StyleSheet, Alert } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';                          //access campsites from redux stores so we need connect function
 import { Loading } from './LoadingComponent';                   //show Loading component while assets loading
-import { baseUrl} from '../shared/baseUrl';                     //images from json server
+import { baseUrl } from '../shared/baseUrl';                     //images from json server
 import { SwipeRow } from 'react-native-swipe-list-view';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { deleteFavorite } from '../redux/ActionCreators';       //when we want to dispatch action creator from component, use mapDispatchToProps
@@ -86,6 +86,7 @@ class Favorites extends Component {
                 </View>
             );
         }
+        
         return(                                    //no loading/error at this point  -- pass data prop for campsites to render
             <Animatable.View animation = 'fadeInRightBig' duration ={2000} delay={2000}>    
                 <FlatList
