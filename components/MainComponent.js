@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Home from './HomeComponent';
 import Directory from './DirectoryComponent';
 import CampsiteInfo from './CampsiteInfoComponent';
-import About from './ AboutComponent';
+import About from './AboutComponent';
 import Contact from './ContactComponent';
 
 import Reservation from './ReservationComponent';       //the reservation form import
@@ -11,7 +11,9 @@ import Favorites from './FavoritesComponent';
 import Login from './LoginComponent';
 
 import Constants from 'expo-constants';
-import { View, Platform, StyleSheet, Text, ScrollView, Image } from 'react-native';
+import { View, Platform, StyleSheet, Text, ScrollView, Image, Alert, ToastAndroid } from 'react-native';
+
+
 // import { CAMPSITES } from '../shared/campsites';  removed, no longer in use
 import { createStackNavigator } from 'react-navigation-stack';
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
@@ -20,6 +22,8 @@ import { Icon } from 'react-native-elements';
 import SafeAreaView from 'react-native-safe-area-view';         //for iphoneX - defines part of area as safe where nothing will layout in certain area for physical area of phone
 import { connect } from 'react-redux';
 import { fetchCampsites, fetchComments, fetchPromotions, fetchPartners } from '../redux/ActionCreators';
+import NetInfo from '@react-native-community/netinfo';
+
 
 const mapDispatchToProps = {        //allows us to access ActionCreators as props
     fetchCampsites,
@@ -336,7 +340,44 @@ class Main extends Component {
         this.props.fetchComments();
         this.props.fetchPromotions();
         this.props.fetchPartners();
+
+        NetInfo.fetch().then(connectionInfo => {                                                //fetch method returns promise
+            (Platform.OS === 'ios')
+                ? Alert.alert('Initial Network Connectivity Type:', connectionInfo.type)        //if IOS, disply this connection
+                : ToastAndroid.show('Initial Network Connectivity Type: ' +                     //or if not, toast for android, brief message that fades away, LONG is 3.5 seconds
+                    connectionInfo.type, ToastAndroid.LONG);
+        });
+
+        this.unsubscribeNetInfo = NetInfo.addEventListener(connectionInfo => {                  //this is a method on the parent class  -- addEventListener takes callback function
+            this.handleConnectivityChange(connectionInfo);                                      
+        });
     }
+
+    componentWillUnmount() {
+        this.unsubscribeNetInfo();                                              //stop listening for connection changes when main component unmounts
+    }
+
+    handleConnectivityChange = connectionInfo => {                                          //change in connection state, this will pop up
+        let connectionMsg = 'You are now connected to an active network.';
+        switch (connectionInfo.type) {
+            case 'none':
+                connectionMsg = 'No network connection is active.';
+                break;
+            case 'unknown':
+                connectionMsg = 'The network connection state is now unknown.';
+                break;
+            case 'cellular':
+                connectionMsg = 'You are now connected to a cellular network.';
+                break;
+            case 'wifi':
+                connectionMsg = 'You are now connected to a WiFi network.';
+                break;
+        }
+        (Platform.OS === 'ios')
+            ? Alert.alert('Connection change:', connectionMsg)
+            : ToastAndroid.show(connectionMsg, ToastAndroid.LONG);
+    }
+
     // constructor(props) {
     //     super(props);       //constructor and super are need for the this.state
     //     this.state = {

@@ -57,6 +57,8 @@ class Favorites extends Component {
                                     { cancelable: false }                   //by default alerts on android can be dismissed by outside of box, makes user choose
                                 )
                             }
+
+                            
                         >
                             <Text style = {styles.deleteText}>Delete</Text>
                         </TouchableOpacity>
