@@ -8,6 +8,9 @@ import * as Permissions from 'expo-permissions';                        //instal
 import { createBottomTabNavigator } from 'react-navigation-tabs';       //installed react-navigation-tabs
 import { baseUrl } from '../shared/baseUrl';
 
+import * as ImageManipulator from 'expo-image-manipulator';
+import { SaveFormat } from 'expo-image-manipulator';
+
 class LoginTab extends Component {          //changed Login to LoginTab
 
     constructor(props) {
@@ -157,7 +160,7 @@ class RegisterTab extends Component {
     }
 
 //Get image from Camera method has async so it can await permission
-    getImageFromCamera = async () => {
+    getImageFromCamera = async() => {
         const cameraPermission = await Permissions.askAsync(Permissions.CAMERA);
         const cameraRollPermission = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
@@ -168,9 +171,20 @@ class RegisterTab extends Component {
             });
             if (!capturedImage.cancelled) {
                 console.log(capturedImage);
-                this.setState({imageUrl: capturedImage.uri});
+                this.processImage(capturedImage.uri);
+                // this.setState({imageUrl: capturedImage.uri});            to call the processed image instead
             }
         }
+    }
+
+//To resize the image we capture in Camera
+    processImage = async(imgUri) => {
+        const processedImage = await ImageManipulator.manipulateAsync(
+            imgUri, [{resize: {width: 400}}],                                   //if we only specify one dimension, it will autmatically do the other
+                { format: ImageManipulator.SaveFormat.PNG}                      //converting the mainpulated image to PNG
+        );
+        console.log(processedImage);
+        this.setState({imageUrl: processedImage.uri});
     }
 
     handleRegister() {                                                                 //EventHandler will be called when the button is pressed
